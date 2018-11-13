@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var cors = require('cors');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -17,6 +18,10 @@ var mysql = require('mysql');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(cors({
+    origin: /landman-frontend-michaelmusictech\.c9users\.io$/,
+    optionsSuccessStatus: 200
+}));
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -31,7 +36,7 @@ app.use((req, res, next) => {
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/api/v1/alto', alto);
+app.use('/v1/alto', alto);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

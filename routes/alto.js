@@ -18,12 +18,12 @@ router.get('/', function(req, res, next) {
 router.get('/:id', (req, res) => {
     var bin = req.params.id;
     const fingerings_query = 'SELECT * from fingerings WHERE bin = ' + bin;
-    const response = {"status": 200, "error": null, "response": []};
+    const response = {"status": 200, "error": null, "response": null};
     connection.query(fingerings_query, (fq_err, fq_res, fq_fields) => {
         if (fq_err) {
             response.error = fq_err;
             res.send(JSON.stringify(response));
-        } else {
+        } else if (fq_res.length) {
             response.response = { ...fq_res[0] };
             const sounds_query = 'SELECT * from sounds WHERE bin = ' + bin;
             connection.query(sounds_query, (sq_err, sq_res, sq_fields) => {
@@ -34,7 +34,10 @@ router.get('/:id', (req, res) => {
                 }
                 res.send(JSON.stringify(response));
             });
+        } else {
+            res.send(JSON.stringify(response));
         }
+
     });
 });
 
