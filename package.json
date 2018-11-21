@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "test": "mocha ./**/*.spec.js",
+    "test": "mocha --opts ./test/mocha.opts",
     "start": "nodejs ./bin/www",
     "dev": "nodemon ./bin/www"
   },

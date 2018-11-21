@@ -1,5 +1,3 @@
-var chai = require('chai'),
-    expect = chai.expect;
 var validate = require('./validate');
 
 describe('expect(validate', () => {
