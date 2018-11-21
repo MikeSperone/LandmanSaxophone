@@ -1,27 +1,32 @@
 var express = require('express');
 var router = express.Router();
-var validate = require('util/validate');
+var validate = require('../util/validate');
 
 function validateUpdatedData(data) {
-    if (!validate.pitch(data)) return false;
-    if (!validate.description(data)) return false;
-    if (data.multi && typeof data.multi === "string" && data.multi.toLowerCase() === "true") {
-        data.multi = true;
-    } else if (data.multi) {
-        data.multi = true;
-    } else {
-        data.multi = false;
+    var pitch = validate.pitch(data.pitch),
+        description = validate.pitch(data.description),
+        multi = validate.multi(data.multi);
+
+    var valData = {};
+
+    var checkVal = function(v, name) {
+        if (v) {
+            if (v.error) return false;
+            valData[name] = v;
+        }
+        return true;
     }
-    return data;
+    if (!checkVal(pitch, 'pitch')) return pitch;
+    if (!checkVal(description, 'description')) return description;
+    if (!checkVal(multi, 'multi')) return multi;
+    return valData;
 }
 
 function objectToQueryString(obj) {
-    var updates = Object.entries(body)
+    var updates = Object.entries(obj)
         .reduce((str, kv) => {
             var [key, value] = kv;
             var quote = (typeof value === "string") ? '"' : '';
-            if (value === true || value === "true") value = 1;
-            if (value === false || value === "false") value = 0;
             return str +
                 '`' + key + '`' +
                 '=' +
@@ -32,11 +37,12 @@ function objectToQueryString(obj) {
 }
 
 function update(req, res, next) {
-    var bin = validate.bin(req.params.id);
-    var soundId = validate.soundId(req.params.soundId);
     var body = validateUpdatedData(req.body);
+    if (body.error) return res.json(body);
+
     var updates = objectToQueryString(body);
 
+    var soundId = validate.soundId(req.params.soundId);
     const update_query = "UPDATE `sounds` SET " +
         updates +
         " WHERE `soundId`=" + soundId;
@@ -54,4 +60,4 @@ function update(req, res, next) {
     });
 }
 
-module.exports = update;
+module.exports = { update, validateUpdatedData, objectToQueryString };

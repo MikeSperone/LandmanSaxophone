@@ -1,23 +1,23 @@
 var validate = require('./validate');
 
-describe('expect(validate', () => {
+describe('validate', () => {
     describe('audio', () => {
         it('should validate', () => {
-            return true;
+            expect(validate.audio('test')).to.equal('test');
         });
 
-        it('should not validate', () => {
+        it.skip('should not validate', () => {
             return true;
         });
     });
 
     describe('description', () => {
-        it('should validate', () => {
+        it('should validate and url encode', () => {
             expect(validate.description("Hello, this is a test")).to.equal("Hello,%20this%20is%20a%20test");
         });
 
         it('should not validate', () => {
-            expect(validate.description(23)).to.be.false;
+            expect(validate.description(23)['error']).to.exist;
         });
     });
 
@@ -27,7 +27,7 @@ describe('expect(validate', () => {
         });
 
         it('should not validate', () => {
-            expect(validate.pitch(true)).to.be.false;
+            expect(validate.pitch(true)['error']).to.exist;
         });
     });
     describe('multi', () => {
@@ -39,7 +39,7 @@ describe('expect(validate', () => {
         });
 
         it('should not validate', () => {
-            expect(validate.multi({})).to.be.false;
+            expect(validate.multi({})['error']).to.exist;
         });
     });
 
@@ -49,7 +49,7 @@ describe('expect(validate', () => {
         });
 
         it('should not validate', () => {
-            expect(validate.bin(100101010)).to.be.false;
+            expect(validate.bin(100101010)['error']).to.exist;
         });
     });
 

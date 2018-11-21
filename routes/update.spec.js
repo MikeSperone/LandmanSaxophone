@@ -1,25 +1,38 @@
 'use strict';
+var update = require('./update');
 
 describe('validateUpdatedData', () => {
 
     it('should validate valid data', () => {
-        const data = {};
-        return true;
+        var pitch = "Eb,Bb,G#",
+            description = "This is some really cool data",
+            multi = "true";
+        const data = { pitch, description, multi };
+        const expectedData = {
+            pitch: encodeURI(pitch),
+            description: encodeURI(description),
+            multi: 1
+        };
+        expect(update.validateUpdatedData(data)).to.eql(expectedData);
     });
 
     it('should validate with missing data', () => {
-        const data = {};
-        return true;
+        var description = "This is some really cool data",
+            multi = "true";
+        const data = { description, multi };
+        const expectedData = {
+            description: encodeURI(description),
+            multi: 1
+        };
+        expect(update.validateUpdatedData(data)).to.eql(expectedData);
     });
 
-    it('should return false with invalid data', () => {
-        const data = {};
-        return true;
-    });
-
-    it('should url encode data', () => {
-        const data = {};
-        return true;
+    it('should return error with invalid data', () => {
+        var pitch = 17,
+            description = "This is some really cool data",
+            multi = "true";
+        const data = { pitch, description, multi };
+        expect(update.validateUpdatedData(data).error).to.have.string('incorrect data type');
     });
 
 });
@@ -27,8 +40,13 @@ describe('validateUpdatedData', () => {
 describe('objectToQueryString', () => {
 
     it('should convert an object to a query string', () => {
-        const obj = {};
-        return true;
+        const obj = {
+            pitch: "A,B,C",
+            description: "cool",
+            multi: 1 
+        };
+        const string = update.objectToQueryString(obj);
+        expect(string).to.equal('`pitch`="A,B,C",`description`="cool",`multi`=1');
     });
 
 });
