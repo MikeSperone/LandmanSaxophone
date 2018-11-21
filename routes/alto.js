@@ -4,7 +4,7 @@ var create = require('./create');
 var multer  = require('multer');
 var upload = multer({ dest: 'uploads/' });
 var read = require('./get');
-var update = require('./update');
+var update = require('./update').update;
 
 /*
  *  CCC
@@ -14,8 +14,8 @@ var update = require('./update');
  *  CCC
  */
 
-router.post('/:id', create);
-router.post('/:id/:soundId', upload.single('audio'), create);
+router.post('/:id', create.bin);
+router.post('/:id/:soundId', upload.single('audio'), create.soundData);
 
 /*
  * RRR
