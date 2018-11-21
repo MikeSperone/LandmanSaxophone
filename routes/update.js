@@ -1,27 +1,21 @@
 var express = require('express');
 var router = express.Router();
+var validate = require('util/validate');
 
 function validateUpdatedData(data) {
-    let vData = {};
-    if (data.pitch) vData.pitch = data.pitch;
-    if (data.description) vData.description = data.description;
+    if (!validate.pitch(data)) return false;
+    if (!validate.description(data)) return false;
     if (data.multi && typeof data.multi === "string" && data.multi.toLowerCase() === "true") {
-        vData.multi = true;
+        data.multi = true;
     } else if (data.multi) {
-        vData.multi = true;
+        data.multi = true;
     } else {
-        vData.multi = false;
+        data.multi = false;
     }
-    return vData;;
+    return data;
 }
 
-function update(req, res, next) {
-    var bin = req.params.id;
-    var soundId = req.params.soundId;
-    console.log('updating...\nbin: ' + bin + '\nsoundId: ' + soundId);
-    var body = validateUpdatedData(req.body);
-    // TODO: Validate data!!!
-    console.log("body: ", body);
+function objectToQueryString(obj) {
     var updates = Object.entries(body)
         .reduce((str, kv) => {
             var [key, value] = kv;
@@ -33,13 +27,22 @@ function update(req, res, next) {
                 '=' +
                 quote + value + quote + ',';
         }, '');
-
     // remove trailing comma
-    updates = updates.slice(0, -1);
+    return updates.slice(0, -1);
+}
+
+function update(req, res, next) {
+    var bin = validate.bin(req.params.id);
+    var soundId = validate.soundId(req.params.soundId);
+    var body = validateUpdatedData(req.body);
+    var updates = objectToQueryString(body);
+
     const update_query = "UPDATE `sounds` SET " +
         updates +
         " WHERE `soundId`=" + soundId;
+
     console.log('update_query: ', update_query);
+
     connection.query(update_query, (err, sql_resp, fields) => {
         const response = {"status": 200, "error": null, "response": null};
         if (err) {
