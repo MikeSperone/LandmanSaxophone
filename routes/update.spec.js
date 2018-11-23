@@ -37,16 +37,3 @@ describe('validateUpdatedData', () => {
 
 });
 
-describe('objectToQueryString', () => {
-
-    it('should convert an object to a query string', () => {
-        const obj = {
-            pitch: "A,B,C",
-            description: "cool",
-            multi: 1 
-        };
-        const string = update.objectToQueryString(obj);
-        expect(string).to.equal('`pitch`="A,B,C",`description`="cool",`multi`=1');
-    });
-
-});

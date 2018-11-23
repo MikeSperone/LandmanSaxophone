@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var validate = require('../util/validate');
-var sendQuery = require('../util/sendQuery').query;
+var express = require('express'),
+    router = express.Router(),
+    validate = require('../util/validate'),
+    objectToQueryString = require('../util/objectToQueryString'),
+    sendQuery = require('../util/sendQuery').query;
 
 function bin(req, res) {
     var bin = validate.bin(req.params.id);
@@ -50,20 +51,30 @@ function soundData(req, res) {
     if (!req.file) {
         return res.json({"status": 200, "error": "no audio file attached", "response": null});
     }
-
+    var bin = validate.bin(req.params.id);
+    if (bin.error) return res.json({"status": 200, "error": bin.error, "response": null});
     var body = validateSoundData(req.body);
     if (body.error) return res.json({"status": 200, "error": body.error, "response": null});
-
     body.name = req.file.filename;
-    var updates = objectToQueryString(body);
+    body.bin = bin;
 
-    var soundId = validate.soundId(req.params.soundId);
-    const create_query = "INSERT `sounds` SET " +
-        updates +
-        " WHERE `soundId`=" + soundId;
+    const checkQuery = "SELECT * from `fingerings` WHERE `bin`=\"" + bin + "\"";;
+    sendQuery(checkQuery).then(r_check => {
+        console.log('r_check: ', r_check);
+        if (r_check.response.length) {
 
-    console.log('create_query: ', create_query);
-    sendQuery(create_query).then(r => res.json(r));
+            var updates = objectToQueryString(body);
+
+            const create_query = "INSERT `sounds` SET " + updates;
+
+            console.log('create_query: ', create_query);
+            sendQuery(create_query).then(r => res.json(r));
+
+        } else {
+            r_check.error = "Item does not exist. bin: " + bin;
+            res.json(r_check);
+        }
+    });
 
 }
 module.exports = { bin, soundData };

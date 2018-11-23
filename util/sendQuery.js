@@ -1,9 +1,13 @@
 function query(query_string) {
     return new Promise(resolve => {
         connection.query(query_string, (err, sql_resp, fields) => {
-            const response = {"status": 200, "error": null, "response": null};
+            var response = {"status": 200, "error": null, "response": null};
             if (err) {
-                response.error = "Database error";
+                if (process.env.ENVIRONMENT === "DEVELOPMENT") {
+                    response.error = "Database error";
+                } else if (process.env.ENVIRONMENT === "PRODUCTION") {
+                    response = err;
+                }
             } else if (sql_resp) {
                 if (sql_resp.changedRows) {
                     response.response = { "created": "ok" };

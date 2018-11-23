@@ -15,7 +15,7 @@ var update = require('./update').update;
  */
 
 router.post('/:id', create.bin);
-router.post('/:id/:soundId', upload.single('audio'), create.soundData);
+router.post('/upload/:id', upload.single('audio'), create.soundData);
 
 /*
  * RRR

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var validate = require('../util/validate');
+var objectToQueryString = require('../util/objectToQueryString');
 
 function validateUpdatedData(data) {
     var pitch = validate.pitch(data.pitch),
@@ -20,20 +21,6 @@ function validateUpdatedData(data) {
     if (!checkVal(description, 'description')) return description;
     if (!checkVal(multi, 'multi')) return multi;
     return valData;
-}
-
-function objectToQueryString(obj) {
-    var updates = Object.entries(obj)
-        .reduce((str, kv) => {
-            var [key, value] = kv;
-            var quote = (typeof value === "string") ? '"' : '';
-            return str +
-                '`' + key + '`' +
-                '=' +
-                quote + value + quote + ',';
-        }, '');
-    // remove trailing comma
-    return updates.slice(0, -1);
 }
 
 function update(req, res, next) {
