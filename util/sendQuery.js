@@ -1,8 +1,6 @@
 function query(query_string) {
     return new Promise(resolve => {
-        console.log('query_string: ', query_string);
         connection.query(query_string, (err, sql_resp, fields) => {
-            console.log('sql_resp: ', sql_resp);
             const response = {"status": 200, "error": null, "response": null};
             if (err) {
                 response.error = "Database error";

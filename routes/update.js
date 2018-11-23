@@ -38,7 +38,7 @@ function objectToQueryString(obj) {
 
 function update(req, res, next) {
     var body = validateUpdatedData(req.body);
-    if (body.error) return res.json(body);
+    if (body.error) return res.json({"status": 200, "error": body.error, "response": null});
 
     var updates = objectToQueryString(body);
 
@@ -54,7 +54,11 @@ function update(req, res, next) {
         if (err) {
             response.error = err;
         } else if (sql_resp) {
-            response.response = {"changedRows": sql_resp.changedRows};
+            if (sql_resp.changedRows) {
+                response.response = { "updated": true};
+            } else {
+                response.response = { "updated": false };
+            }
         }
         res.json(response);
     });
