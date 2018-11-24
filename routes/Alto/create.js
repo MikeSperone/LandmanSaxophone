@@ -1,8 +1,8 @@
 var express = require('express'),
     router = express.Router(),
-    validate = require('../util/validate'),
-    objectToQueryString = require('../util/objectToQueryString'),
-    sendQuery = require('../util/sendQuery').query;
+    validate = require('../../util/validate'),
+    objectToQueryString = require('../../util/objectToQueryString'),
+    sendQuery = require('../../util/sendQuery').query;
 
 function bin(req, res) {
     var bin = validate.bin(req.params.id);

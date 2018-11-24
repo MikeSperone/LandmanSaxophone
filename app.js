@@ -10,7 +10,7 @@ require('dotenv').config();
 
 var routes = require('./routes/index');
 var users = require('./routes/users.js');
-var alto = require('./routes/alto');
+var alto = require('./routes/Alto');
 
 var app = express();
 var db_config = require('./config/db');

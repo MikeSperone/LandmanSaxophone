@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var validate = require('../util/validate');
-var objectToQueryString = require('../util/objectToQueryString');
+var validate = require('../../util/validate');
+var objectToQueryString = require('../../util/objectToQueryString');
 
 function validateUpdatedData(data) {
     var pitch = validate.pitch(data.pitch),
@@ -10,7 +10,7 @@ function validateUpdatedData(data) {
 
     var valData = {};
 
-    var checkVal = function(v, name) {
+    function checkVal(v, name) {
         if (v) {
             if (v.error) return false;
             valData[name] = v;
