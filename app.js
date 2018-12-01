@@ -20,8 +20,16 @@ var mysql = require('mysql');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+var whitelist = require('.whitelist') || [/http://localhost:3000$/];
+
 app.use(cors({
-    origin: /landman-frontend-michaelmusictech\.c9users\.io$/,
+    origin: (origin, callback) => {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     optionsSuccessStatus: 200
 }));
 app.use(favicon());

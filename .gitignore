@@ -1,6 +1,7 @@
 node_modules/
 config/db.js
 
+bin/deploy
 # Logs
 logs
 *.log
@@ -8,5 +9,5 @@ npm-debug.log*
 
 # dotenv environment variables file
 .env
-
+.whitelist
 
