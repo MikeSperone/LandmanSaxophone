@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var create = require('./create');
-var multer  = require('multer');
-var upload = multer({ dest: '/var/www/audio' });
 var read = require('./get');
 var update = require('./update').update;
+
+const AUDIO_FOLDER = process.env.AUDIO_FOLDER || '../../audio';
+var multer  = require('multer');
+var upload = multer({ dest: AUDIO_FOLDER});
 
 /*
  *  CCC
