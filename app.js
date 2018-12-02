@@ -22,14 +22,16 @@ app.set('view engine', 'jade');
 
 var whitelist = require('./.whitelist.js') || ["http://localhost:3000"];
 
+function whitelistedURLs(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+    } else {
+        callback(new Error('Not allowed by CORS'));
+    }
+}
+
 app.use(cors({
-    origin: (origin, callback) => {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: whitelistedURLs,
     optionsSuccessStatus: 200
 }));
 app.use(favicon());
