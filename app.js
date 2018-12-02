@@ -20,7 +20,7 @@ var mysql = require('mysql');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var whitelist = require('./.whitelist.js') || [/localhost\:3000$/];
+var whitelist = require('./.whitelist.js') || ["http://localhost:3000"];
 
 app.use(cors({
     origin: (origin, callback) => {
