@@ -4,9 +4,9 @@ function query(query_string) {
             var response = {"status": 200, "error": null, "response": null};
             if (err) {
                 if (process.env.ENVIRONMENT === "DEVELOPMENT") {
+                    response.error = err;
+                } else {
                     response.error = "Database error";
-                } else if (process.env.ENVIRONMENT === "PRODUCTION") {
-                    response = err;
                 }
             } else if (sql_resp) {
                 if (sql_resp.changedRows) {

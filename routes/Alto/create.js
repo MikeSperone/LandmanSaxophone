@@ -7,7 +7,7 @@ var express = require('express'),
 function bin(req, res) {
     var bin = validate.bin(req.params.id);
     if (bin.error) return res.json({"status": 200, "error": bin.error, "response": null});
-    const checkQuery = "SELECT * from `fingerings` WHERE `bin`=\"" + bin + "\"";;
+    const checkQuery = "SELECT * from `fingerings` WHERE `bin`=\"" + bin + "\"";
     sendQuery(checkQuery).then(r_check => {
         console.log('r_check: ', r_check);
         if (!r_check.response.length) {
@@ -35,7 +35,7 @@ function validateSoundData(data) {
     var valData = {};
 
     var checkVal = function(v, name) {
-        if (v) {
+        if (typeof v !== "undefined" && v !== null) {
             if (v.error) return false;
             valData[name] = v;
         }
