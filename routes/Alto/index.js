@@ -6,13 +6,19 @@ var update = require('./update').update;
 
 const AUDIO_FOLDER = process.env.AUDIO_FOLDER || '../../audio';
 var multer  = require('multer');
-var upload = multer({ dest: AUDIO_FOLDER});
+var storage = multer.diskStorage({
+    destination: AUDIO_FOLDER,
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
+    },
+});
+var upload = multer({ storage: storage });
 
 /*
  *  CCC
  * C   C
  * C
- * C   CREATE
+ * C   C
  *  CCC
  */
 
@@ -24,7 +30,7 @@ router.post('/upload/:id', upload.single('audio'), create.soundData);
  * R  R
  * RRR
  * R  R
- * R   READ
+ * R   R
  */
 
 /* GET users listing. */
@@ -35,7 +41,7 @@ router.get('/:id/:soundId', read.soundId);
 /*
  * U   U 
  * U   U
- * U   UPDATE
+ * U   U
  *  UUU
  */
 router.put('/:id/:soundId', update);
@@ -43,7 +49,7 @@ router.put('/:id/:soundId', update);
 /*
  * DDD
  * D  D
- * D   DELETE
+ * D   D
  * D  D
  * DDD
  */

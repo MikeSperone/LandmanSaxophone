@@ -31,7 +31,7 @@ function whitelistedURLs(origin, callback) {
 }
 
 app.use(cors({
-    origin: whitelistedURLs,
+    origin: "http://159.203.187.114",
     optionsSuccessStatus: 200
 }));
 app.use(favicon());
