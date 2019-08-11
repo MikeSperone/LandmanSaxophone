@@ -1,5 +1,4 @@
 node_modules/
-config/db.js
 
 bin/deploy
 # Logs
@@ -7,7 +6,17 @@ logs
 *.log
 npm-debug.log*
 
+# sql database
+*.sql
+
 # dotenv environment variables file
 .env
 .whitelist.js
 
+# backups
+*.bak
+*.bak.js
+
+# vim swap files
+*.swp
+*.swo

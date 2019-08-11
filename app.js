@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 
 require('dotenv').config();
 
-var routes = require('./routes/index');
-var users = require('./routes/users.js');
+var routes = require('./routes');
+var users = require('./routes/users');
 var alto = require('./routes/Alto');
 
 var app = express();
@@ -18,7 +18,7 @@ var mysql = require('mysql');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 var whitelist = require('./.whitelist.js') || ["http://localhost:3000"];
 
@@ -34,6 +34,7 @@ app.use(cors({
     origin: "http://159.203.187.114",
     optionsSuccessStatus: 200
 }));
+
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -42,7 +43,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     global.connection = mysql.createConnection(db_config);
-    connection.connect();
+    connection.connect(e => {
+        if (e) {
+            console.error('Database Connection Error: ', e.stack);
+        } else {
+            console.log('db connected');
+        }
+    });
     next();
 });
 

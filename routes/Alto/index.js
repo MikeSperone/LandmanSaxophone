@@ -14,45 +14,20 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-/*
- *  CCC
- * C   C
- * C
- * C   C
- *  CCC
- */
-
+/* C */
 router.post('/:id', create.bin);
 router.post('/upload/:id', upload.single('audio'), create.soundData);
 
-/*
- * RRR
- * R  R
- * RRR
- * R  R
- * R   R
- */
-
+/* R */
 /* GET users listing. */
 router.get('/', read.all);
 router.get('/:id', read.byId);
 router.get('/:id/:soundId', read.soundId);
 
-/*
- * U   U 
- * U   U
- * U   U
- *  UUU
- */
+/* U */
 router.put('/:id/:soundId', update);
 
-/*
- * DDD
- * D  D
- * D   D
- * D  D
- * DDD
- */
+/* D */
 // router.del('/:id/:soundId', del.byId);
 
 module.exports = router;
