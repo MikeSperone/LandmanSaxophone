@@ -1,4 +1,9 @@
 var express = require('express');
+var expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const passport = require('passport');
+require('./config/passport')(passport);
+
 var path = require('path');
 var cors = require('cors');
 var favicon = require('static-favicon');
@@ -12,13 +17,15 @@ var routes = require('./routes');
 var users = require('./routes/users');
 var alto = require('./routes/Alto');
 
-var app = express();
-var db_config = require('./config/db');
-var mysql = require('mysql');
+const app = express();
+const db_config = require('./config/db');
+const mysql = require('mysql');
+const flash = require('connect-flash');
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.use(expressLayouts);
+// app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 var whitelist = require('./.whitelist.js') || ["http://localhost:3000"];
 
@@ -37,8 +44,26 @@ app.use(cors({
 
 app.use(favicon());
 app.use(logger('dev'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
