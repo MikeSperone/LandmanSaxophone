@@ -33,6 +33,8 @@ module.exports = function(passport) {
                    });
                }
 
+            }).catch(e => {
+                return done(null, false, { message: 'Unknown server error' });
             });
         })
     );
@@ -41,10 +43,12 @@ module.exports = function(passport) {
         done(null, user.email);
     });
 
-    passport.deserializeUser((id, done) => {
-        sendQuery(id).then(user => {
+    passport.deserializeUser((email, done) => {
+        sendQuery(userQuery(email)).then(user => {
             // TODO: what is this error thing here?  Do I need to pass a value?
-            done('error?', user.response[0]);
+            done(user.error, user.response[0]);
+        }).catch(e => {
+            return done(null, false, { message: 'Unknown server error' });
         });
     });
 };
