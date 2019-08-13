@@ -3,6 +3,7 @@ var router = express.Router();
 var create = require('./create');
 var read = require('./get');
 var update = require('./update').update;
+const authJwt = require('../../config/auth').authJwt;
 
 const AUDIO_FOLDER = process.env.AUDIO_FOLDER || '../../audio';
 var multer  = require('multer');
@@ -15,8 +16,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 /* C */
-router.post('/:id', create.bin);
-router.post('/upload/:id', upload.single('audio'), create.soundData);
+router.post('/:id', authJwt, create.bin);
+router.post('/upload/:id', authJwt, upload.single('audio'), create.soundData);
 
 /* R */
 /* GET users listing. */
@@ -25,7 +26,7 @@ router.get('/:id', read.byId);
 router.get('/:id/:soundId', read.soundId);
 
 /* U */
-router.put('/:id/:soundId', update);
+router.put('/:id/:soundId', authJwt, update);
 
 /* D */
 // router.del('/:id/:soundId', del.byId);

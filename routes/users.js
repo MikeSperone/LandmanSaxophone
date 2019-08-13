@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const passport = require('passport');
+
+const jwt = require('jsonwebtoken');
+const passport = require('../config/auth').passport;
+
+const constants = require('../config/constants');
 
 const sendQuery = require('../util/sendQuery').query,
     objectToQueryString = require('../util/objectToQueryString'); 
@@ -48,7 +52,6 @@ router.post('/register', (req, res) => {
         renderErrorMessages();
     } else {
         const checkQuery = 'SELECT * from `users` WHERE email = \"' + email + '\"';
-        console.info(checkQuery);
         sendQuery(checkQuery)
             .then(r_check => {
                 if (r_check.response.length) {
@@ -94,9 +97,27 @@ router.post('/register', (req, res) => {
 // Login Handle
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
+        session: false
+        // successRedirect: '/dashboard',
+        // failureRedirect: '/users/login',
+        // failureFlash: true
+    },
+    (err, user, info) => {
+        user = user.email;
+        if (err || !user) {
+            return res.status(400).json({
+                message: info ? info.message : 'Login failed',
+                user: user
+            });
+        }
+
+        req.login(user, {session: false}, err => {
+            if (err) res.send(err);
+
+            const token = jwt.sign(user, constants.JWT_SECRET);
+
+            return res.json({ user, token });
+        });
     })(req, res, next);
 });
 

@@ -20,4 +20,9 @@ function query(query_string) {
     });
 }
 
-module.exports = { query };
+function userQuery(email) {
+    const userQuery = 'SELECT * from users WHERE email = \"' + email + '\"';
+    return query(userQuery);
+}
+
+module.exports = { query, userQuery };
