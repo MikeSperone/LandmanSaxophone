@@ -1,8 +1,7 @@
 var express = require('express');
 var expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
-const passport = require('passport');
-require('./config/passport')(passport);
+const passport = require('./config/auth').passport;
 
 var path = require('path');
 var cors = require('cors');
