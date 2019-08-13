@@ -26,10 +26,16 @@ app.use(expressLayouts);
 // app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-var whitelist = require('./.whitelist.js') || ["http://localhost:3000"];
+var whitelist =["http://localhost:3000", "http://localhost:3001"];
+try {
+    whitelist = require('./.whitelist.js');
+} catch {}
 
 function whitelistedURLs(origin, callback) {
+    console.info('origin: ', origin);
+    console.info('whitelist: ', whitelist);
     if (whitelist.indexOf(origin) !== -1) {
+        console.info('origin: ', origin);
         callback(null, true);
     } else {
         callback(new Error('Not allowed by CORS'));
@@ -37,7 +43,7 @@ function whitelistedURLs(origin, callback) {
 }
 
 app.use(cors({
-    origin: "http://159.203.187.114",
+    origin: whitelistedURLs,
     optionsSuccessStatus: 200
 }));
 
