@@ -29,7 +29,7 @@ app.set('view engine', 'ejs');
 var whitelist =["http://localhost:3000", "http://localhost:3001"];
 try {
     whitelist = require('./.whitelist.js');
-} catch {}
+} catch (e) {}
 
 function whitelistedURLs(origin, callback) {
     console.info('origin: ', origin);

@@ -3,7 +3,7 @@ const JWTStrategy = jwt.Strategy;
 const ExtractJwt = jwt.ExtractJwt;
 const bcrypt = require('bcryptjs');
 const userQuery = require('../util/sendQuery').userQuery;
-const constants = require('../config/constants');
+const constants = require('./constants');
 
 const jwtOpts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -11,7 +11,6 @@ const jwtOpts = {
 };
 
 const jwtStrategy = new JWTStrategy(jwtOpts, async (payload, done) => {
-    console.info('hi payload: ', payload);
     try {
         userQuery(payload)
             .then(user => {

@@ -12,7 +12,7 @@ npm-debug.log*
 # dotenv environment variables file
 .env
 .whitelist.js
-config/constants
+config/constants.js
 
 # backups
 *.bak
