@@ -6,5 +6,6 @@ const PORT = process.env.PORT || 3000;
 app.set('port', PORT);
 
 var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + PORT);
+    debug('Express server listening on port ' + PORT);
+    process.send('ready');
 });

@@ -32,10 +32,7 @@ try {
 } catch (e) {}
 
 function whitelistedURLs(origin, callback) {
-    console.info('origin: ', origin);
-    console.info('whitelist: ', whitelist);
     if (whitelist.indexOf(origin) !== -1) {
-        console.info('origin: ', origin);
         callback(null, true);
     } else {
         callback(new Error('Not allowed by CORS'));
@@ -75,9 +72,15 @@ app.use((req, res, next) => {
     global.connection = mysql.createConnection(db_config);
     connection.connect(e => {
         if (e) {
+            // TODO: log error to file
             console.error('Database Connection Error: ', e.stack);
         } else {
             console.log('db connected');
+            process.on('SIGINT', function() {
+                connection.end(function(err) {
+                    process.exit(err ? 1 : 0);
+                });
+            });
         }
     });
     next();
@@ -110,10 +113,12 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
+// TODO: create an error page
+// TODO: log to a file
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-        message: err.message,
+        message: err.status || 500,
         error: {}
     });
 });
