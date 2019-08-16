@@ -66,17 +66,19 @@ router.post('/register', (req, res) => {
                             const createQuery = "INSERT `users` SET " + updates;
                             sendQuery(createQuery)
                                 .then(r_ins => {
+                                    console.log('r_ins: ', r_ins);
                                     if (r_ins.response.affectedRows) {
-                                        // r_ins.response = { "created": true };
-                                        // res.json(r_ins);
-                                        req.flash('success_msg', 'You are now registered, and can log in');
-                                        res.redirect('/users/login');
+                                        r_ins.response = { "created": true };
+                                        res.json(r_ins);
+                                        // req.flash('success_msg', 'You are now registered, and can log in');
+                                        // res.redirect('/landman/users/login');
                                     } else {
                                         errors.push({ msg: 'Unknown server error, user not created.' });
                                         renderErrorMessages();
                                     }
                                 })
                                 .catch(e => {
+                                    console.error(e);
                                     errors.push({ msg: 'Server error' });
                                     renderErrorMessages();
                                 });
@@ -85,6 +87,7 @@ router.post('/register', (req, res) => {
                 }
             })
             .catch(e => {
+                console.error(e);
                 errors.push({ msg: 'Server error' });
             })
             
@@ -98,12 +101,8 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
         session: false
-        // successRedirect: '/dashboard',
-        // failureRedirect: '/users/login',
-        // failureFlash: true
     },
     (err, user, info) => {
-        user = user.email;
         if (err || !user) {
             return res.status(400).json({
                 message: info ? info.message : 'Login failed',
@@ -114,9 +113,10 @@ router.post('/login', (req, res, next) => {
         req.login(user, {session: false}, err => {
             if (err) res.send(err);
 
-            const token = jwt.sign(user, constants.JWT_SECRET);
+            const token = jwt.sign(user.email, constants.JWT_SECRET);
+            const { firstName, lastName, permissionsLevel } = user;
 
-            return res.json({ user, token });
+            return res.json({ user: { firstName, lastName, permissionsLevel }, token });
         });
     })(req, res, next);
 });
