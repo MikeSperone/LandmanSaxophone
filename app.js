@@ -23,7 +23,6 @@ const flash = require('connect-flash');
 
 // view engine setup
 app.use(expressLayouts);
-// app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 var whitelist =["http://localhost:3000", "http://localhost:3001"];
@@ -39,10 +38,14 @@ function whitelistedURLs(origin, callback) {
     }
 }
 
-app.use(cors({
+const myCors = cors({
     origin: whitelistedURLs,
     optionsSuccessStatus: 200
-}));
+});
+// app.use(cors({
+//     origin: whitelistedURLs,
+//     optionsSuccessStatus: 200
+// }));
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -88,7 +91,7 @@ app.use((req, res, next) => {
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/v1/alto', alto);
+app.use('/v1/alto', myCors, alto);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
