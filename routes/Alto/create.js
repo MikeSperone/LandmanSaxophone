@@ -4,7 +4,14 @@ var express = require('express'),
     objectToQueryString = require('../../util/objectToQueryString'),
     sendQuery = require('../../util/sendQuery').query;
 
+function checkPermissions(user, res) {
+    if (user && user.permissionsLevel >= 4) {
+        res.json({"status": 401, "error": "Unauthorized", "response": "Unauthorized"});
+    }
+}
+
 function bin(req, res) {
+    checkPermissions(req.user, res);
     var bin = validate.bin(req.params.id);
     if (bin.error) return res.json({"status": 200, "error": bin.error, "response": null});
     const checkQuery = "SELECT * from `fingerings` WHERE `bin`=\"" + bin + "\"";
@@ -48,6 +55,7 @@ function validateSoundData(data) {
 }
 
 function soundData(req, res) {
+    checkPermissions(req.user, res);
     if (!req.file) {
         return res.json({"status": 200, "error": "no audio file attached", "response": null});
     }

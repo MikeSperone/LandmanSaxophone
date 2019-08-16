@@ -23,7 +23,16 @@ function validateUpdatedData(data) {
     return valData;
 }
 
+function checkPermissions(user, res) {
+    // TODO: see if this is user's own content
+    // if (ownContent && user.permissionsLevel === 5)
+    if (user && user.permissionsLevel >= 3) {
+        res.json({"status": 401, "error": "Unauthorized", "response": "Unauthorized"});
+    }
+}
+
 function update(req, res, next) {
+    checkPermissions(req.user, res);
     var body = validateUpdatedData(req.body);
     if (body.error) return res.json({"status": 200, "error": body.error, "response": null});
 
