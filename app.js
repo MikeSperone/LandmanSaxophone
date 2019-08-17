@@ -20,7 +20,7 @@ const app = express();
 const db_config = require('./config/db');
 const mysql = require('mysql');
 const flash = require('connect-flash');
-
+ 
 // view engine setup
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
@@ -31,6 +31,7 @@ try {
 } catch (e) {}
 
 function whitelistedURLs(origin, callback) {
+    console.info('origin', origin);
     if (whitelist.indexOf(origin) !== -1) {
         callback(null, true);
     } else {
@@ -38,14 +39,10 @@ function whitelistedURLs(origin, callback) {
     }
 }
 
-const myCors = cors({
+app.use(cors({
     origin: whitelistedURLs,
     optionsSuccessStatus: 200
-});
-// app.use(cors({
-//     origin: whitelistedURLs,
-//     optionsSuccessStatus: 200
-// }));
+}));
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -91,7 +88,7 @@ app.use((req, res, next) => {
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/v1/alto', myCors, alto);
+app.use('/v1/alto', alto);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

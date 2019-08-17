@@ -28,11 +28,13 @@ function checkPermissions(user, res) {
     // if (ownContent && user.permissionsLevel === 5)
     if (user && user.permissionsLevel >= 3) {
         res.json({"status": 401, "error": "Unauthorized", "response": "Unauthorized"});
+        return false;
     }
+    return true;
 }
 
 function update(req, res, next) {
-    checkPermissions(req.user, res);
+    if (!checkPermissions(req.user, res)) return;
     var body = validateUpdatedData(req.body);
     if (body.error) return res.json({"status": 200, "error": body.error, "response": null});
 
