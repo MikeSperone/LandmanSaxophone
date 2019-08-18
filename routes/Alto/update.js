@@ -26,7 +26,7 @@ function validateUpdatedData(data) {
 function checkPermissions(user, res) {
     // TODO: see if this is user's own content
     // if (ownContent && user.permissionsLevel === 5)
-    if (user && user.permissionsLevel >= 3) {
+    if (user && user.permissionsLevel >= 4) {
         res.json({"status": 401, "error": "Unauthorized", "response": "Unauthorized"});
         return false;
     }
