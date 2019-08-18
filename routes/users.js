@@ -22,6 +22,7 @@ router.get('/login', (req, res) => res.render('login'));
 router.get('/register', (req, res) => res.render('register'));
 
 router.post('/register', (req, res) => {
+    console.log('user attempting to register');
     const { firstName, lastName, email, password, password2 } = req.body;
     let errors = [];
 
@@ -38,6 +39,7 @@ router.post('/register', (req, res) => {
     }
 
     const renderErrorMessages = () => {
+        console.error('Registration failed ', errors);
         res.render('register', {
             errors,
             firstName,
@@ -66,8 +68,8 @@ router.post('/register', (req, res) => {
                             const createQuery = "INSERT `users` SET " + updates;
                             sendQuery(createQuery)
                                 .then(r_ins => {
-                                    console.log('r_ins: ', r_ins);
                                     if (r_ins.response.affectedRows) {
+                                        console.log(`User registered - ${firstName} ${lastName} - ${email}`); 
                                         r_ins.response = { "created": true };
                                         res.json(r_ins);
                                         // req.flash('success_msg', 'You are now registered, and can log in');
