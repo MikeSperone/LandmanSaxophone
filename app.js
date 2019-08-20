@@ -14,7 +14,7 @@ require('dotenv').config();
 
 var routes = require('./routes');
 var register = require('./routes/Users/register');
-var users = require('./routes/Users');
+var login = require('./routes/Users/login');
 var alto = require('./routes/Alto');
 
 const app = express();
@@ -25,8 +25,6 @@ const flash = require('connect-flash');
 // view engine setup
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
-
-app.use('/register', register);
 
 var whitelist =["http://localhost:3000", "http://localhost:3001"];
 try {
@@ -42,10 +40,10 @@ function whitelistedURLs(origin, callback) {
     }
 }
 
-app.use(cors({
+const corsOptions = {
     origin: whitelistedURLs,
     optionsSuccessStatus: 200
-}));
+};
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -88,9 +86,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/v1/alto', alto);
+app.use('/register', register);
+app.use('/users', cors(corsOptions), login);
+app.use('/v1/alto', cors(corsOptions), alto);
+app.use('/', cors(corsOptions), routes);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

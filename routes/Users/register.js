@@ -3,11 +3,11 @@ const router = express.Router();
 
 const bcrypt = require('bcryptjs');
 const sendQuery = require('../../util/sendQuery').query,
-    objectToQueryString = require('../../util/objectToQueryString'); 
+    objectToQueryString = require('../../util/objectToQueryString');
 
-router.get('/register', (req, res) => res.render('register'));
+router.get('/', (req, res) => res.render('register'));
 
-router.post('/register', (req, res) => {
+router.post('/', (req, res) => {
     console.log('user attempting to register');
     const { firstName, lastName, email, password, password2 } = req.body;
     let errors = [];
