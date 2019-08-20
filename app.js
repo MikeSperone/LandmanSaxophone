@@ -13,7 +13,8 @@ var bodyParser = require('body-parser');
 require('dotenv').config();
 
 var routes = require('./routes');
-var users = require('./routes/users');
+var register = require('./routes/Users/register');
+var users = require('./routes/Users');
 var alto = require('./routes/Alto');
 
 const app = express();
@@ -24,6 +25,8 @@ const flash = require('connect-flash');
 // view engine setup
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
+
+app.use('/register', register);
 
 var whitelist =["http://localhost:3000", "http://localhost:3001"];
 try {
@@ -72,7 +75,6 @@ app.use((req, res, next) => {
     global.connection = mysql.createConnection(db_config);
     connection.connect(e => {
         if (e) {
-            // TODO: log error to file
             console.error('Database Connection Error: ', e.stack);
         } else {
             console.log('db connected');
@@ -122,6 +124,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;
