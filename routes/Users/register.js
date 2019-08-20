@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcryptjs');
-const sendQuery = require('../util/sendQuery').query,
-    objectToQueryString = require('../util/objectToQueryString'); 
+const sendQuery = require('../../util/sendQuery').query,
+    objectToQueryString = require('../../util/objectToQueryString'); 
 
 router.get('/register', (req, res) => res.render('register'));
 

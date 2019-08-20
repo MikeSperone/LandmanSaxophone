@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const jwt = require('jsonwebtoken');
-const passport = require('../config/auth').passport;
+const passport = require('../../config/auth').passport;
 
-const constants = require('../config/constants');
+const constants = require('../../config/constants');
 
 /* GET users listing. */
 router.get('/', (req, res) => res.render('index', { title: 'Users' }));
